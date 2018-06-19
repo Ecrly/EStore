@@ -8,21 +8,22 @@ from django.contrib.auth.models import User
 # 用户
 class Customer(models.Model):
 
-    id = models.IntegerField(max_length=10, primary_key=True)
-    user = models.OneToOneField('User', on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField("电话", max_length=45)
     address = models.CharField("地址", max_length=45, null=True)
     country = models.CharField("国家", max_length=10, null=True)
 
 
-class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('user', 'phone', 'address', 'country')
+
+# 分类
+class Category(models.Model):
+
+    name = models.CharField("分类名", max_length=45)
 
 
 # 商品
 class Product(models.Model):
 
-    id = models.IntegerField(max_length=10, primary_key=True)
     name = models.CharField("商品名", max_length=45)
     price = models.FloatField("价格")
     description = models.TextField("描述", max_length=300)
@@ -33,17 +34,10 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'last_update')
 
 
-# 分类
-class Category(models.Model):
-
-    id = models.IntegerField(max_length=10, primary_key=True)
-    name = models.CharField("分类名", max_length=45)
-
 
 # 订单
 class CustomerOrder(models.Model):
 
-    id = models.IntegerField(max_length=10, primary_key=True)
     amount = models.FloatField("总价")
     date_create = models.DateTimeField("创建时间", auto_now=True)
     submitted = models.BooleanField("是否提交")
@@ -52,7 +46,7 @@ class CustomerOrder(models.Model):
                                      through_fields=('customerorder', 'product'))
 
 class CustomerOrderAdmin(models.Model):
-    list_display = ('customer', 'product', 'datecreate')
+    list_display = ('product', 'datecreate')
 
 class OrderProduct(models.Model):
 
